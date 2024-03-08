@@ -9,7 +9,7 @@ const logger = require('morgan');
 require('express-async-errors');
 
 const mainRouter = require('./routes/mainRouter.js');
-
+const studentsRouter = require('./routes/students.js');
 
 const app = express();
 
@@ -32,5 +32,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // routes
 app.use('/api/v1', mainRouter);
+
+app.use("/api/v1/students", studentsRouter);
 
 module.exports = app;
