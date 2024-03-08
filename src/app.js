@@ -9,10 +9,7 @@ const logger = require('morgan');
 require('express-async-errors');
 
 const mainRouter = require('./routes/mainRouter.js');
-const studentsRouter = require('./routes/students.js');
-
-const app = express();
-
+const studentsRouter = require('./routes/studentsRouter.js');
 
 const app = express();
 

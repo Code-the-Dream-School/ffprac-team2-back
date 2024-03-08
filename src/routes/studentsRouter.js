@@ -8,7 +8,7 @@ const {
   addStudent,
   updateStudent,
   deleteStudent
-} = require("../controllers/students");
+} = require("../controllers/studentsController");
 
 router.get('/', getStudentsProducts);
 router.get('/:id', getStudentById);
