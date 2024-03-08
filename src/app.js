@@ -13,6 +13,9 @@ const studentsRouter = require('./routes/students.js');
 
 const app = express();
 
+
+const app = express();
+
 // middleware
 app.use(cors());
 app.use(helmet());
