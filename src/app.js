@@ -33,7 +33,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // routes
 app.use('/api/v1', mainRouter);
-app.use('/api/v1/register', authRouter)
-//app.use('/api/v1/auth', authRouter);
+//app.use('/api/v1/register', authRouter)
+app.use('/api/v1/auth', authRouter);
 
 module.exports = app;
