@@ -1,6 +1,6 @@
 const Tutor = require("../models/Tutor");
 const { StatusCodes } = require("http-status-codes");
-// const { BadRequestError, NotFoundError } = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllTutors = async (req, res) => {
     try {
@@ -33,6 +33,15 @@ const getTutorById = async (req, res) => {
     }
 };
 
+const createTutor = async (req, res) => {
+    try {
+        const tutor = await Tutor.create(req.body);
+        res.status(StatusCodes.CREATED).json({ tutor });
+    } catch (error) {
+        console.error("Error in createTutor:", error);
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+};
 
 const updateTutor = async (req, res) => {
     try {
@@ -83,6 +92,7 @@ const deleteTutor = async (req, res) => {
 module.exports = {
     getAllTutors,
     getTutorById,
+    createTutor,
     updateTutor,
     deleteTutor,
 };
