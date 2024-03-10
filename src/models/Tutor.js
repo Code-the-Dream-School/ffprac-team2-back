@@ -6,15 +6,16 @@ const TutorSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
+    
     education: {
         type: String,
-        // required: [true, "Education is required"],
     },
+    
     about: {
         type: String,
-        // required: [true, "About section is required"],
     },
-    grades: {
+    
+    grades:[{
         type: String,
         enum: [
             "K",
@@ -31,83 +32,76 @@ const TutorSchema = new mongoose.Schema({
             "11",
             "12",
         ],
-        // required: [true, "Grades are required"],
-    },
-    subjects: [
-        {
-            math: {
-                type: String,
-                enum: [
-                    "Math",
-                    "Algebra",
-                    "Geometry",
-                    "Trigonometry",
-                    "Calculus",
-                    "Statistics",
-                    "Pre-Calculus",
-                    "SAT Math Test Prep",
-                    "ACT Math Test Prep",
-                ],
-            },
-        },
-        {
-            science: {
-                type: String,
-                enum: [
-                    "Biology",
-                    "Chemistry",
-                    "Earth Science",
-                    "Physics",
-                    "Science",
-                    "ACT Science Test Prep",
-                ],
-            },
-        },
-        {
-            english: {
-                type: String,
-                enum: [
-                    "English",
-                    "ESL",
-                    "Poetry",
-                    "Literacy",
-                    "Reading",
-                    "Writing",
-                    "ACT English Test Prep",
-                    "ACT Reading Test Prep",
-                    "SAT Writing Test Prep",
-                    "ACT Writing Test Prep",
-                ],
-            },
-        },
-        {
-            socialstudies: {
-                type: String,
-                enum: [
-                    "World History",
-                    "Pychology",
-                    "US Goverment",
-                    "Social Science",
-                    "US History",
-                    "Political Science",
-                    "Georgraphy",
-                    "European History",
-                ],
-            },
-        },
-        {
-            foreignlang: {
-                type: String,
-                enum: ["Spanish", "French", "Chineese", "German", "Latin"],
-            },
-        },
-    ],
+    }],
+    
+    mathSubjects: [{
+        type: String,
+        enum: [
+            "Algebra",
+            "Geometry",
+            "Trigonometry",
+            "Calculus",
+            "Statistics",
+            "Pre-Calculus",
+            "SAT Math Test Prep",
+            "ACT Math Test Prep",
+        ],
+    }],
+    
+    scienceSubjects: [{
+        type: String,
+        enum: [
+            "Biology",
+            "Chemistry",
+            "Earth Science",
+            "Physics",
+            "Science",
+            "ACT Science Test Prep",
+            ],
+    }],
+        
+    englishSubjects:[{
+        type: String,
+        enum: [
+            "English",
+            "ESL",
+            "Poetry",
+            "Literacy",
+            "Reading",
+            "Writing",
+            "ACT English Test Prep",
+            "ACT Reading Test Prep",
+            "SAT Writing Test Prep",
+            "ACT Writing Test Prep",
+            ],
+    }],
+    
+    socialstudiesSubjects: [{
+        type: String,
+        enum: [
+            "World History",
+            "Pychology",
+                "US Goverment",
+                "Social Science",
+                "US History",
+                "Political Science",
+                "Georgraphy",
+                "European History",
+            ],
+    }],
+    
+    foreignlangSubjects:[ {
+        type: String,
+        enum: ["Spanish", "French", "Chineese", "German", "Latin"],
+    }],
+            
     yearsOfExperience: {
         type: Number,
         min: 1,
         max: 50,
     },
-    availability: {
+    
+    availability: [{
         type: String,
         enum: [
             "Monday",
@@ -118,7 +112,7 @@ const TutorSchema = new mongoose.Schema({
             "Saturday",
             "Sunday",
         ],
-    },
+    }],
 });
 
 
