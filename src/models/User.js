@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: [true, "Please Provide Your Last Name"],
-    maxlength: 50,
+    maxlength: [50, "Last name should not be more that 50 characters"],
     minlength: [3, "Last name must be at least 3 characters"],
   },
   email: {
@@ -66,7 +66,7 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 UserSchema.methods.createJWT = function () {
-    const token = jwt.sign({ userId: this._id, name: this.firstName }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: this._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
     return token;

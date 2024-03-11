@@ -8,10 +8,10 @@ const register = async (req, res) => {
   const user = await User.create({ ...req.body });
 
   console.log("test");
-  console.log("name ", user.name);
+  console.log("name ", user.firstName);
   const token = user.createJWT();
   console.log("token ", token);
-  res.status(StatusCodes.CREATED).json({ user: { name: user.name, role: user.role }, token });
+  res.status(StatusCodes.CREATED).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
 };
 
 const login = async (req, res) => {
@@ -34,16 +34,10 @@ const login = async (req, res) => {
   //comparing password
   const token = user.createJWT();
   console.log("userId ", user._id)
-  res.status(StatusCodes.OK).json({ user: { name: user.name }, token });
-};
-
-
-const empt =async (req, res) => {
-console.log('empt');
+  res.status(StatusCodes.CREATED).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
 };
 
 module.exports = {
   register,
   login,
-  empt,
 };
