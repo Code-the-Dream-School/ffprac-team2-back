@@ -28,13 +28,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide password"],
     minlength: [6, "Password must be at least 6 characters"],
-    // validate: {
-    //   validator: function (password) {
-    //     // Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character
-    //     return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,}$/.test(password);
-    //   },
-    //   message: "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character",
-    // },
+    validate: {
+      validator: function (password) {
+        // Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,}$/.test(password);
+      },
+      message: "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character",
+    },
   },
   role: {
     type: String,
@@ -42,23 +42,24 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.pre("save", async function () {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  });
-
-// UserSchema.pre("save", async function (next) {
-// //   if (!this.isModified("password")) {
-// //     return next();
-// //   }
-//   try {
+// UserSchema.pre("save", async function () {
 //     const salt = await bcrypt.genSalt(10);
 //     this.password = await bcrypt.hash(this.password, salt);
-//     next();
-//   } catch (error) {
-//     next(error);
+//   });
+
+UserSchema.pre("save", async function (next) {
+// For chaging password. Will be updated
+//   if (!this.isModified("password")) {
+//     return next();
 //   }
-// });
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
