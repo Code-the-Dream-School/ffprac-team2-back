@@ -3,7 +3,7 @@ const Student = require("../models/Student");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
-const getStudentsProducts = async (req, res) => {
+const getAllStudents = async (req, res) => {
    const students = await Student.find().sort(
     "createdAt"
   );
@@ -76,7 +76,7 @@ const deleteStudent = async (req, res) => {
 };
 
 module.exports = {
-  getStudentsProducts,
+  getAllStudents,
   getStudentById,
   addStudent,
   updateStudent,

@@ -3,14 +3,14 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  getStudentsProducts,
+  getAllStudents,
   getStudentById,
   addStudent,
   updateStudent,
   deleteStudent
 } = require("../controllers/studentsController");
 
-router.get('/', getStudentsProducts);
+router.get('/', getAllStudents);
 router.get('/:id', getStudentById);
 router.post('/', addStudent);
 router.patch('/:id', updateStudent);

@@ -13,7 +13,7 @@ const tutorInfoSchema = new mongoose.Schema({
   grade: {
     type: String,
     enum: [
-      "Kindergarden",
+      "K",
       "1",
       "2",
       "3",
@@ -72,4 +72,4 @@ const StudentsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", StudentsSchema);
+module.exports = mongoose.model("Student", StudentsSchema);
