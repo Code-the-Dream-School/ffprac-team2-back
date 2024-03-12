@@ -9,9 +9,11 @@ const logger = require('morgan');
 require('express-async-errors');
 
 const mainRouter = require('./routes/mainRouter.js');
+const authRouter = require('./routes/auth');
 const studentsRouter = require('./routes/studentsRouter.js');
 
 const app = express();
+
 
 // middleware
 app.use(cors());
@@ -32,6 +34,8 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // routes
 app.use('/api/v1', mainRouter);
+
+app.use('/api/v1/auth', authRouter);
 
 app.use("/api/v1/students", studentsRouter);
 
