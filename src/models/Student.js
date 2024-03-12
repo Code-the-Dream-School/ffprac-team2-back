@@ -52,7 +52,7 @@ const StudentsSchema = new mongoose.Schema(
     grade: {
       type: String,
       enum: [
-        "Kindergarden",
+        "K",
         "1",
         "2",
         "3",
