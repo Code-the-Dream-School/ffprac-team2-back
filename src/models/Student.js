@@ -40,11 +40,11 @@ const StudentsSchema = new mongoose.Schema(
       minlenght: [2, "Student name should be atleast 3 characters"],
       maxlength: [50, "Student name cannot exceed 50 characters"],
     },
-    // userId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: [true, "User is required"],
-    // },
+    parentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "User is required"],
+    },
     // imageUrl: [{
     //   type: String,
     //   required: [true, "Please choose student image"],

@@ -3,8 +3,11 @@ const Student = require("../models/Student");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
-const getAllStudents = async (req, res) => {
-   const students = await Student.find().sort(
+const getAllParentStudents = async (req, res) => {
+  const {
+    user: { userId },   
+  } = req;
+   const students = await Student.find({ parentId: userId }).sort(
     "createdAt"
   );
   res.status(StatusCodes.OK).json({ students, count: students.length });
@@ -12,10 +15,11 @@ const getAllStudents = async (req, res) => {
 
 const getStudentById = async (req, res) => {
   const {
+    user: { userId },
     params: { id: studentId },
   } = req;
   const student = await Student.findOne({
-    _id: studentId,
+    _id: studentId, parentId: userId
   });
   if (!student) {
     throw new NotFoundError(`No student with id: ${studentId}`);
@@ -24,14 +28,14 @@ const getStudentById = async (req, res) => {
 };
 
 const addStudent = async (req, res) => {
-  // req.body.createdBy = req.user.userId;
+  req.body.parentId = req.user.userId;
   const student = await Student.create({ ...req.body });
   res.status(StatusCodes.CREATED).json({ student,  msg: "Student has been successfully added" });
 };
 
 const updateStudent = async (req, res) => {
   try {
-    // const userId = req.user.userId;
+    const userId = req.user.userId;
     const studentId = req.params.id;
     
     const { name, grade } = req.body;
@@ -41,7 +45,7 @@ const updateStudent = async (req, res) => {
     }
 
     const student = await Student.findOneAndUpdate(
-      { _id: studentId },
+      { _id: studentId, parentId: userId},
       req.body,
       { new: true, runValidators: true }
     );
@@ -58,11 +62,11 @@ const updateStudent = async (req, res) => {
 
 const deleteStudent = async (req, res) => {
   try {
-    // const userId = req.user.userId;
+    const userId = req.user.userId;
     const studentId = req.params.id;
    
     const student = await Student.findOneAndDelete(
-      { _id: studentId },    
+      { _id: studentId, parentId: userId},
     );
 
     if (!student) {
@@ -76,7 +80,7 @@ const deleteStudent = async (req, res) => {
 };
 
 module.exports = {
-  getAllStudents,
+  getAllParentStudents,
   getStudentById,
   addStudent,
   updateStudent,

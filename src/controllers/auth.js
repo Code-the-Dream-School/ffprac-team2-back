@@ -7,8 +7,7 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
 
-  console.log("test");
-  console.log("name ", user.firstName);
+  // console.log("name: ", user.firstName, user.lastName, user.email, user.role);
   const token = user.createJWT();
   console.log("token ", token);
   res.status(StatusCodes.CREATED).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
@@ -33,7 +32,7 @@ const login = async (req, res) => {
 
   //comparing password
   const token = user.createJWT();
-  console.log("userId ", user._id)
+  // console.log("userId ", user._id, user.firstName, user.lastName, user.email, user.role);
   res.status(StatusCodes.CREATED).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
 };
 
