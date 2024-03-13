@@ -66,8 +66,8 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 UserSchema.methods.createJWT = function () {
-    const token = jwt.sign({ userId: this._id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
+    const token = jwt.sign({ userId: this._id, firstName: this.firstName, lastName: this.lastName, email: this.email, role: this.role }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_LIFETIME,
     });
     return token;
   };
