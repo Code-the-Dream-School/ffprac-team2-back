@@ -7,6 +7,17 @@ const TutorSchema = new mongoose.Schema({
         required: true,
     },
     
+    studentID: {
+        type: mongoose.Types.ObjectId,
+        ref: "Student",
+        required: true,
+    },
+    
+    subjectID: {
+        type: mongoose.Types.ObjectId,
+        ref: "Subject",
+        required: true,
+    },
     education: {
         type: String,
     },
@@ -34,66 +45,6 @@ const TutorSchema = new mongoose.Schema({
         ],
     }],
     
-    mathSubjects: [{
-        type: String,
-        enum: [
-            "Algebra",
-            "Geometry",
-            "Trigonometry",
-            "Calculus",
-            "Statistics",
-            "Pre-Calculus",
-            "SAT Math Test Prep",
-            "ACT Math Test Prep",
-        ],
-    }],
-    
-    scienceSubjects: [{
-        type: String,
-        enum: [
-            "Biology",
-            "Chemistry",
-            "Earth Science",
-            "Physics",
-            "Science",
-            "ACT Science Test Prep",
-            ],
-    }],
-        
-    englishSubjects:[{
-        type: String,
-        enum: [
-            "English",
-            "ESL",
-            "Poetry",
-            "Literacy",
-            "Reading",
-            "Writing",
-            "ACT English Test Prep",
-            "ACT Reading Test Prep",
-            "SAT Writing Test Prep",
-            "ACT Writing Test Prep",
-            ],
-    }],
-    
-    socialstudiesSubjects: [{
-        type: String,
-        enum: [
-            "World History",
-            "Pychology",
-                "US Goverment",
-                "Social Science",
-                "US History",
-                "Political Science",
-                "Georgraphy",
-                "European History",
-            ],
-    }],
-    
-    foreignlangSubjects:[ {
-        type: String,
-        enum: ["Spanish", "French", "Chineese", "German", "Latin"],
-    }],
             
     yearsOfExperience: {
         type: Number,
