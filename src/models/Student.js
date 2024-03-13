@@ -37,7 +37,7 @@ const StudentsSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter student name"],
       trim: true,
-      minlenght: [2, "Student name should be atleast 3 characters"],
+      minlenght: [2, "Student name should be at least 3 characters"],
       maxlength: [50, "Student name cannot exceed 50 characters"],
     },
     parentId: {
