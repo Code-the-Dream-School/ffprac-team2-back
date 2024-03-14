@@ -11,6 +11,8 @@ require('express-async-errors');
 const mainRouter = require('./routes/mainRouter.js');
 const authRouter = require('./routes/auth');
 const studentsRouter = require('./routes/studentsRouter.js');
+const tutorRouter = require("./routes/tutorRouter.js"); 
+
 
 const app = express();
 
@@ -38,5 +40,7 @@ app.use('/api/v1', mainRouter);
 app.use('/api/v1/auth', authRouter);
 
 app.use("/api/v1/students", studentsRouter);
+
+app.use("/api/v1/tutors", tutorRouter);
 
 module.exports = app;
