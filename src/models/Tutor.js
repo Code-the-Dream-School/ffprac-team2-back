@@ -7,11 +7,11 @@ const TutorSchema = new mongoose.Schema({
         required: true,
     },
     
-    subjectId: {
-        type: mongoose.Types.ObjectId,
-        ref: "Subject",
-        required: true,
-    },
+    // subjectId: {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: "Subject",
+    //     required: true,
+    // },
 
     education: {
         type: String,
