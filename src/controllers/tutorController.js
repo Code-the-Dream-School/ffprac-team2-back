@@ -1,10 +1,13 @@
 const Tutor = require("../models/Tutor");
+const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllTutors = async (req, res) => {
     try {
-        const tutors = await Tutor.find();
+        // const tutors = await User.find({ role: "tutor" })
+        const tutors = await Tutor.find({ })
+        console.log(tutors)
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
         console.error("Error in getAllTutors:", error);
@@ -35,7 +38,9 @@ const getTutorById = async (req, res) => {
 
 const createTutor = async (req, res) => {
     try {
-        const tutor = await Tutor.create(req.body);
+        req.body.userId = req.user.userId
+        console.log("UserID:", req.user.userId);
+        const tutor = await Tutor.create({ ...req.body });
         res.status(StatusCodes.CREATED).json({ tutor });
     } catch (error) {
         console.error("Error in createTutor:", error);
@@ -46,7 +51,9 @@ const createTutor = async (req, res) => {
 const updateTutor = async (req, res) => {
     try {
         const tutorId = req.params.id;
-        const tutor = await Tutor.findByIdAndUpdate(tutorId, req.body, {
+        const userId = req.user.userId;
+        
+        const tutor = await Tutor.findOneAndUpdate({ _id: tutorId, userId: userId }, req.body, {
             new: true,
         });
         if (!tutor) {

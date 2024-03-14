@@ -15,8 +15,8 @@ router.route("/").get(getAllTutors).post(authenticateUser, createTutor);
 router
     .route("/:id")
     .get(getTutorById)
-    .patch(authenticateUser, updateTutor)
-    .delete(authenticateUser, deleteTutor);
+    .patch(authenticateUser,  updateTutor)
+    .delete(authenticateUser,  deleteTutor);
 
 
 module.exports = router;

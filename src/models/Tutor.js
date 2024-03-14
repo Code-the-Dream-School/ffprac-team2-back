@@ -1,23 +1,18 @@
 const mongoose = require("mongoose");
 
 const TutorSchema = new mongoose.Schema({
-    userID: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: true,
     },
     
-    studentID: {
-        type: mongoose.Types.ObjectId,
-        ref: "Student",
-        required: true,
-    },
-    
-    subjectID: {
+    subjectId: {
         type: mongoose.Types.ObjectId,
         ref: "Subject",
         required: true,
     },
+
     education: {
         type: String,
     },
@@ -27,7 +22,7 @@ const TutorSchema = new mongoose.Schema({
     },
     
     grades:[{
-        type: String,
+        type: [String],
         enum: [
             "K",
             "1",
@@ -53,7 +48,7 @@ const TutorSchema = new mongoose.Schema({
     },
     
     availability: [{
-        type: String,
+        type: [String],
         enum: [
             "Monday",
             "Tuesday",
