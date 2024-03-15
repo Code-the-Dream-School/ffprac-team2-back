@@ -58,6 +58,10 @@ const TutorSchema = new mongoose.Schema({
     type: String,
   },
 
+  avatar: {
+      type: String,
+  },
+    
   about: {
     type: String,
   },

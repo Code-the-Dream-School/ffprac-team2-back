@@ -5,9 +5,13 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllTutors = async (req, res) => {
     try {
-        // const tutors = await User.find({ role: "tutor" })
-        const tutors = await Tutor.find({ })
-        console.log(tutors)
+        const tutors = await Tutor.find({})
+            .populate({
+                path: 'userId',
+                select: 'firstName lastName'
+            })
+            .select('grades about yearsOfExperience availability avatar');
+
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
         console.error("Error in getAllTutors:", error);
@@ -16,6 +20,20 @@ const getAllTutors = async (req, res) => {
         });
     }
 };
+
+// const getAllTutors = async (req, res) => {
+//     try {
+//         // const tutors = await User.find({ role: "tutor" })
+//         const tutors = await Tutor.find({ })
+//         console.log(tutors)
+//         res.status(StatusCodes.OK).json({ tutors });
+//     } catch (error) {
+//         console.error("Error in getAllTutors:", error);
+//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//             error: "Internal Server Error",
+//         });
+//     }
+// };
 
 const getTutorById = async (req, res) => {
     try {
