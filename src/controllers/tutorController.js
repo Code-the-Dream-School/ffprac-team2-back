@@ -10,7 +10,8 @@ const getAllTutors = async (req, res) => {
                 path: 'userId',
                 select: 'firstName lastName'
             })
-            .select('grades about yearsOfExperience availability avatar');
+            .select('grades about yearsOfExperience availability avatar subject ForeignLanguages Science MathSubject SocialStudies English');
+        console.log(tutors)
 
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
@@ -57,9 +58,18 @@ const getTutorById = async (req, res) => {
 const createTutor = async (req, res) => {
     try {
         req.body.userId = req.user.userId
+
+        const tutor = await Tutor.find({ userId: req.params.userId })
+        if (tutor) {
+            res.status(StatusCodes.BAD_REQUEST).json({ error: "User already has a tutor" });
+        }
+        else {
+            const tutor = await Tutor.create({...req.body });
+            res.status(StatusCodes.CREATED).json({ tutor });
+        }
         console.log("UserID:", req.user.userId);
-        const tutor = await Tutor.create({ ...req.body });
-        res.status(StatusCodes.CREATED).json({ tutor });
+        // const tutor = await Tutor.create({ ...req.body });
+        // res.status(StatusCodes.CREATED).json({ tutor });
     } catch (error) {
         console.error("Error in createTutor:", error);
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
