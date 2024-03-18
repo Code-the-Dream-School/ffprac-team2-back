@@ -7,11 +7,13 @@ const getAllTutors = async (req, res) => {
     try {
         const tutors = await Tutor.find({})
             .populate({
-                path: 'userId',
-                select: 'firstName lastName'
+                path: "userId",
+                select: "firstName lastName",
             })
-            .select('grades about yearsOfExperience availability avatar subject ForeignLanguages Science MathSubject SocialStudies English');
-        console.log(tutors)
+            .select(
+                "grades about yearsOfExperience availability avatar subject ForeignLanguages Science MathSubject SocialStudies English"
+            );
+        console.log(tutors);
 
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
@@ -21,20 +23,6 @@ const getAllTutors = async (req, res) => {
         });
     }
 };
-
-// const getAllTutors = async (req, res) => {
-//     try {
-//         // const tutors = await User.find({ role: "tutor" })
-//         const tutors = await Tutor.find({ })
-//         console.log(tutors)
-//         res.status(StatusCodes.OK).json({ tutors });
-//     } catch (error) {
-//         console.error("Error in getAllTutors:", error);
-//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-//             error: "Internal Server Error",
-//         });
-//     }
-// };
 
 const getTutorById = async (req, res) => {
     try {
@@ -57,14 +45,15 @@ const getTutorById = async (req, res) => {
 
 const createTutor = async (req, res) => {
     try {
-        req.body.userId = req.user.userId
+        req.body.userId = req.user.userId;
 
-        const tutor = await Tutor.find({ userId: req.params.userId })
+        const tutor = await Tutor.findOne({ userId: req.user.userId });
         if (tutor) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: "User already has a tutor" });
-        }
-        else {
-            const tutor = await Tutor.create({...req.body });
+            res.status(StatusCodes.BAD_REQUEST).json({
+                error: "User already has a tutor",
+            });
+        } else {
+            const tutor = await Tutor.create({ ...req.body });
             res.status(StatusCodes.CREATED).json({ tutor });
         }
         console.log("UserID:", req.user.userId);
@@ -80,10 +69,14 @@ const updateTutor = async (req, res) => {
     try {
         const tutorId = req.params.id;
         const userId = req.user.userId;
-        
-        const tutor = await Tutor.findOneAndUpdate({ _id: tutorId, userId: userId }, req.body, {
-            new: true,
-        });
+
+        const tutor = await Tutor.findOneAndUpdate(
+            { _id: tutorId, userId: userId },
+            req.body,
+            {
+                new: true,
+            }
+        );
         if (!tutor) {
             throw new NotFoundError("Tutor not found");
         }
@@ -114,8 +107,6 @@ const deleteTutor = async (req, res) => {
         console.error("Error in deleteTutor:", error);
         if (error instanceof NotFoundError) {
             res.status(StatusCodes.NOT_FOUND).json({ error: error.message });
-            
-            
         } else {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                 error: "Internal Server Error",
