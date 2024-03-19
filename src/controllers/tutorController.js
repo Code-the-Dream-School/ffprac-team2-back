@@ -3,6 +3,33 @@ const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
+const getAllTutorsBySubject = async (req, res) => {
+    try {
+        const search = [new RegExp(req.query.subject, "i")];
+
+        const tutors = await Tutor.find({
+            $or: [
+                { English: { $in: search } },
+                { MathSubject: { $in: search } },
+                { ForeignLanguages: { $in: search } },
+                { Science: { $in: search } },
+                { SocialStudies: { $in: search } },
+            ],
+        }).populate({
+            path: "userId",
+            select: "firstName lastName",
+        });
+
+        console.log("Found tutors:", tutors);
+        res.status(StatusCodes.OK).json({ tutors });
+    } catch (error) {
+        console.error("Error in getAllTutorsBySearch:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Internal Server Error",
+        });
+    }
+};
+
 const getAllTutors = async (req, res) => {
     try {
         const tutors = await Tutor.find({})
@@ -121,4 +148,5 @@ module.exports = {
     createTutor,
     updateTutor,
     deleteTutor,
+    getAllTutorsBySubject,
 };

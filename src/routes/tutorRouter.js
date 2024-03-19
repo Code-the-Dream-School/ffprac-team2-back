@@ -8,15 +8,17 @@ const {
     createTutor,
     updateTutor,
     deleteTutor,
+    getAllTutorsBySubject,
 } = require("../controllers/tutorController");
 
 router.route("/").get(getAllTutors).post(authenticateUser, createTutor);
 
+router.route("/search").get(getAllTutorsBySubject);
+
 router
     .route("/:id")
     .get(getTutorById)
-    .patch(authenticateUser,  updateTutor)
-    .delete(authenticateUser,  deleteTutor);
-
+    .patch(authenticateUser, updateTutor)
+    .delete(authenticateUser, deleteTutor);
 
 module.exports = router;
