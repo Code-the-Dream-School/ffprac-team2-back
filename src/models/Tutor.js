@@ -70,7 +70,7 @@ const TutorSchema = new mongoose.Schema({
         enum: [
             "Writing",
             "Reading",
-            "esl",
+            "ESL",
             "Poetry",
             "Literacy",
             "ACT English Test Prep",
