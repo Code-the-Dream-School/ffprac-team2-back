@@ -7,72 +7,78 @@ const TutorSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    
-    subject: [{
-        type: [String],
-        enum: ["English", "Foreign Languages", "Math", "Science", "Social Studies"],
-    }],
 
-    ForeignLanguages: [{
+    subjects: {
+        type: [String],
+        enum: [
+            "English",
+            "Foreign Languages",
+            "Math",
+            "Science",
+            "Social Studies",
+        ],
+    },
+
+    ForeignLanguages: {
         type: [String],
         enum: ["Spanish", "French", "Chineese", "German", "Latin"],
-    }],
+    },
 
-    MathSubject: [{
+    MathSubject: {
         type: [String],
         enum: [
-        "Math",
-        "Algebra",
-        "Geometry",
-        "Trigonometry",
-        "Calculus",
-        "Statistics",
-        "Pre-Calculus",
-        "SAT Math Test Prep",
-        "ACT Math Test Prep",
+            "Math",
+            "Algebra",
+            "Geometry",
+            "Trigonometry",
+            "Calculus",
+            "Statistics",
+            "Pre-Calculus",
+            "SAT Math Test Prep",
+            "ACT Math Test Prep",
         ],
-    }],
-    
-    Science: [{
-        type: [String],
-        enum: [
-        "Biology",
-        "Chemistry",
-        "Earth Science",
-        "Physics",
-        "Science",
-        "ACT Science Test Prep",
-        ],
-    }],
+    },
 
-    SocialStudies: [{
+    Science: {
         type: [String],
         enum: [
-        "World History",
-        "Psychology",
-        "US Government",
-        "Social Science",
-        "US History",
-        "Political Science",
-        "Geography",
-        "European History",
+            "Biology",
+            "Chemistry",
+            "Earth Science",
+            "Physics",
+            "Science",
+            "ACT Science Test Prep",
         ],
-    }],
-    
-    English: [{
+    },
+
+    SocialStudies: {
         type: [String],
         enum: [
-        "Writing",
-        "Reading",
-        "ESL",
-        "Poetry",
-        "Literacy",
-        "ACT English Test Prep",
-        "ACT Reading Test Prep",
-        "ACT Writing Test Prep",
+            "World History",
+            "Psychology",
+            "US Government",
+            "Social Science",
+            "US History",
+            "Political Science",
+            "Geography",
+            "European History",
         ],
-    }],
-    
+    },
+
+    English: {
+        type: [String],
+        enum: [
+            "Writing",
+            "Reading",
+            "ESL",
+            "Poetry",
+            "Literacy",
+            "ACT English Test Prep",
+            "ACT Reading Test Prep",
+            "ACT Writing Test Prep",
+        ],
+    },
+
     education: {
         type: String,
     },
@@ -80,13 +86,12 @@ const TutorSchema = new mongoose.Schema({
     avatar: {
         type: String,
     },
-    
+
     about: {
         type: String,
     },
 
-    grades: [
-        {
+    grades: {
         type: [String],
         enum: [
             "K",
@@ -103,8 +108,7 @@ const TutorSchema = new mongoose.Schema({
             "11",
             "12",
         ],
-        },
-    ],
+    },
 
     yearsOfExperience: {
         type: Number,
@@ -112,8 +116,7 @@ const TutorSchema = new mongoose.Schema({
         max: 50,
     },
 
-    availability: [
-        {
+    availability: {
         type: [String],
         enum: [
             "Monday",
@@ -123,9 +126,8 @@ const TutorSchema = new mongoose.Schema({
             "Friday",
             "Saturday",
             "Sunday",
-            ],
-        },
-    ],
+        ],
+    },
 });
 
 module.exports = mongoose.model("Tutor", TutorSchema);
