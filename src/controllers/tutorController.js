@@ -6,7 +6,11 @@ const { BadRequestError, NotFoundError } = require("../errors");
 const getAllTutorsBySubject = async (req, res) => {
     try {
         const search = [new RegExp(req.query.subject, "i")];
-
+        if (!req.query.subject) {
+            return res
+                .status(400)
+                .json({ error: "A subject query parameter is required." });
+        }
         const tutors = await Tutor.find({
             $or: [
                 { English: { $in: search } },
@@ -19,7 +23,6 @@ const getAllTutorsBySubject = async (req, res) => {
             path: "userId",
             select: "firstName lastName",
         });
-
         console.log("Found tutors:", tutors);
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
