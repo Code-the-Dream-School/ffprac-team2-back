@@ -6,10 +6,13 @@ const tutorInfoSchema = new mongoose.Schema({
     ref: 'Tutor',
     required: true
   },
-  subjects: {
+  tutorName: {
+    type: String,
+  },
+  subjects: [{
     type: String,
     required: true
-  },
+  }],
   grade: {
     type: String,
     enum: [
