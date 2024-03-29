@@ -41,7 +41,7 @@ const getAllTutors = async (req, res) => {
                 select: "firstName lastName",
             })
             .select(
-                "grades about yearsOfExperience availability education avatar subject ForeignLanguages Science MathSubject SocialStudies English"
+                "grades about yearsOfExperience availability education avatar ForeignLanguages Science MathSubject SocialStudies English"
             );
         console.log(tutors);
 

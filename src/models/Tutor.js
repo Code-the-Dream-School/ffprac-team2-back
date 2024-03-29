@@ -8,17 +8,6 @@ const TutorSchema = new mongoose.Schema({
         unique: true,
     },
 
-    subjects: {
-        type: [String],
-        enum: [
-            "English",
-            "Foreign Languages",
-            "Math",
-            "Science",
-            "Social Studies",
-        ],
-    },
-
     ForeignLanguages: {
         type: [String],
         enum: ["Spanish", "French", "Chineese", "German", "Latin"],
