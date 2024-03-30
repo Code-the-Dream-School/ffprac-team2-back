@@ -37,7 +37,7 @@ const sendemailController = async (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.error("Error in sendEmailToTutor:", error);
+                console.error("Error in sendemailController:", error);
                 res.status(500).json({
                     message: "Internal Server Error",
                     error,
@@ -48,7 +48,7 @@ const sendemailController = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Error in sendEmailToTutor:", error);
+        console.error("Error in sendemailController:", error);
         res.status(500).json({ message: "Internal Server Error", error });
     }
 };
