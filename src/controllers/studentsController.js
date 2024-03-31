@@ -64,58 +64,47 @@ const updateStudent = async (req, res) => {
     const userId = req.user.userId;
     const studentId = req.params.id;
 
-    const { name, grade, tutorInfo, tutorIdToRemove } = req.body;
-    if (!name && !grade && !tutorInfo && !tutorIdToRemove) {
+    const { name, grade, tutorInfo, tutorToRemove } = req.body;
+    if (!name && !grade && !tutorInfo && !tutorToRemove) {
       throw new BadRequestError("Please provide at least one value to update");
     }
+
+    const student = await Student.findOne({ _id: studentId, parentId: userId });
+
+    if (!student) {
+      throw new NotFoundError(`No student with id: ${studentId}`);
+    }
+
     let updatedStudent;
 
-    if (tutorIdToRemove) {
+    if (tutorToRemove) {
+      const { tutorId, subject } = tutorToRemove;
       updatedStudent = await Student.findByIdAndUpdate(
         studentId,
-        { $pull: { tutorInfo: { tutorId: tutorIdToRemove } } },
+        { $pull: { tutorInfo: { tutorId: tutorId, subject: subject } } },
         { new: true }
       );
     } else {
-      const student = await Student.findOne({
-        _id: studentId,
-        parentId: userId,
-      });
-      if (!student) {
-        throw new NotFoundError(`No student with id: ${studentId}`);
-      }
-
       if (tutorInfo && tutorInfo.length > 0) {
-        let existingTutorInfo = student.tutorInfo.find((info) =>
-          info.tutorId.equals(tutorInfo[0].tutorId)
-        );
-
-        if (existingTutorInfo) {
-          for (const subject of tutorInfo[0].subjects) {
-            if (!existingTutorInfo.subjects.includes(subject)) {
-              existingTutorInfo.subjects.push(subject);
-            }
-          }
-        } else {
-          const tutor = await Tutor.findOne({
-            _id: tutorInfo[0].tutorId,
-          }).populate("userId", "firstName lastName");
-          if (!tutor) {
-            throw new NotFoundError(
-              `No tutor with id: ${tutorInfo[0].tutorId}`
-            );
-          }
-          tutorInfo[0].tutorName = `${tutor.userId.firstName} ${tutor.userId.lastName}`;
-          student.tutorInfo.push(tutorInfo[0]);
+        const tutor = await Tutor.findOne({
+          _id: tutorInfo[0].tutorId,
+        }).populate("userId", "firstName lastName");
+        if (!tutor) {
+          throw new NotFoundError(`No tutor with id: ${tutorInfo[0].tutorId}`);
         }
+        tutorInfo[0].tutorName = `${tutor.userId.firstName} ${tutor.userId.lastName}`;
+        student.tutorInfo.push(tutorInfo[0]);
       }
+
       updatedStudent = await student.save();
     }
 
-    res.status(StatusCodes.OK).json({
-      student: updatedStudent,
-      msg: "Student info has been successfully updated",
-    });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        student: updatedStudent,
+        msg: "Student info has been successfully updated",
+      });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
