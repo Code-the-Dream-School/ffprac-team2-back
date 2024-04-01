@@ -1,59 +1,110 @@
 const Student = require("../models/Student");
+const Tutor = require("../models/Tutor");
 
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllParentStudents = async (req, res) => {
-  const {
-    user: { userId },   
-  } = req;
-   const students = await Student.find({ parentId: userId }).sort(
-    "createdAt"
-  );
-  res.status(StatusCodes.OK).json({ students, count: students.length });
+  try {
+    const {
+      user: { userId },
+    } = req;
+
+    const students = await Student.find({ parentId: userId })
+      .populate("parentId", "firstName lastName")
+      .sort("createdAt");
+
+    res.status(StatusCodes.OK).json({
+      students,
+      count: students.length,
+    });
+  } catch (err) {
+    console.error("Error in getAllParentStudents:", err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
+  }
 };
 
 const getStudentById = async (req, res) => {
-  const {
-    user: { userId },
-    params: { id: studentId },
-  } = req;
-  const student = await Student.findOne({
-    _id: studentId, parentId: userId
-  });
-  if (!student) {
-    throw new NotFoundError(`No student with id: ${studentId}`);
+  try {
+    const {
+      user: { userId },
+      params: { id: studentId },
+    } = req;
+
+    const student = await Student.findOne({
+      _id: studentId,
+      parentId: userId,
+    })
+      .populate("parentId", "firstName lastName")
+      .sort("createdAt");
+
+    if (!student) {
+      throw new NotFoundError(`No student with id: ${studentId}`);
+    }
+    res.status(StatusCodes.OK).json({ student });
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
   }
-  res.status(StatusCodes.OK).json({ student });
 };
 
 const addStudent = async (req, res) => {
-  req.body.parentId = req.user.userId;
-  const student = await Student.create({ ...req.body });
-  res.status(StatusCodes.CREATED).json({ student,  msg: "Student has been successfully added" });
+  try {
+    req.body.parentId = req.user.userId;
+    const student = await Student.create({ ...req.body });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ student, msg: "Student has been successfully added" });
+  } catch (err) {
+    res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
+  }
 };
 
 const updateStudent = async (req, res) => {
   try {
     const userId = req.user.userId;
     const studentId = req.params.id;
-    
-    const { name, grade } = req.body;
 
-    if (!name || !grade) {
-      throw new BadRequestError("Please provide all values");
+    const { name, grade, tutorInfo, tutorToRemove } = req.body;
+    if (!name && !grade && !tutorInfo && !tutorToRemove) {
+      throw new BadRequestError("Please provide at least one value to update");
     }
 
-    const student = await Student.findOneAndUpdate(
-      { _id: studentId, parentId: userId},
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const student = await Student.findOne({ _id: studentId, parentId: userId });
 
     if (!student) {
       throw new NotFoundError(`No student with id: ${studentId}`);
     }
-    res.status(StatusCodes.OK).json({ student, msg: "Student info has been successfully updated" });   
+
+    let updatedStudent;
+
+    if (tutorToRemove) {
+      const { tutorId, subject } = tutorToRemove;
+      updatedStudent = await Student.findByIdAndUpdate(
+        studentId,
+        { $pull: { tutorInfo: { tutorId: tutorId, subject: subject } } },
+        { new: true }
+      );
+    } else {
+      if (tutorInfo && tutorInfo.length > 0) {
+        const tutor = await Tutor.findOne({
+          _id: tutorInfo[0].tutorId,
+        }).populate("userId", "firstName lastName");
+        if (!tutor) {
+          throw new NotFoundError(`No tutor with id: ${tutorInfo[0].tutorId}`);
+        }
+        tutorInfo[0].tutorName = `${tutor.userId.firstName} ${tutor.userId.lastName}`;
+        student.tutorInfo.push(tutorInfo[0]);
+      }
+
+      updatedStudent = await student.save();
+    }
+
+    res
+      .status(StatusCodes.OK)
+      .json({
+        student: updatedStudent,
+        msg: "Student info has been successfully updated",
+      });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
@@ -64,15 +115,18 @@ const deleteStudent = async (req, res) => {
   try {
     const userId = req.user.userId;
     const studentId = req.params.id;
-   
-    const student = await Student.findOneAndDelete(
-      { _id: studentId, parentId: userId},
-    );
+
+    const student = await Student.findOneAndDelete({
+      _id: studentId,
+      parentId: userId,
+    });
 
     if (!student) {
       throw new NotFoundError(`No student with id: ${studentId}`);
     }
-    res.status(StatusCodes.OK).json({ student, msg: "Student has been successfully deleted" });   
+    res
+      .status(StatusCodes.OK)
+      .json({ student, msg: "Student has been successfully deleted" });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
@@ -84,5 +138,5 @@ module.exports = {
   getStudentById,
   addStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 };

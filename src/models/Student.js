@@ -6,29 +6,26 @@ const tutorInfoSchema = new mongoose.Schema({
     ref: 'Tutor',
     required: true
   },
-  subjects: {
+  tutorName: {
+    type: String,
+  },
+  subject: {
     type: String,
     required: true
   },
-  grade: {
+  availability: {
     type: String,
     enum: [
-      "K",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
     ],
     required: true
-  }
+},
 }, { _id: false });
 
 const StudentsSchema = new mongoose.Schema(
