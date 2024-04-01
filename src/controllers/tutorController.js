@@ -5,6 +5,10 @@ const { BadRequestError, NotFoundError } = require("../errors");
 
 const getAllTutorsBySubject = async (req, res) => {
     try {
+        const page = Number(req.query.page) || 1;
+        const limit = 6;
+        const skip = (page - 1) * limit;
+
         const search = [new RegExp(req.query.subject, "i")];
         if (!req.query.subject) {
             return res
@@ -19,11 +23,15 @@ const getAllTutorsBySubject = async (req, res) => {
                 { Science: { $in: search } },
                 { SocialStudies: { $in: search } },
             ],
-        }).populate({
-            path: "userId",
-            select: "firstName lastName",
-        });
-        console.log("Found tutors:", tutors);
+        })
+            .populate({
+                path: "userId",
+                select: "firstName lastName email",
+            })
+            // .sort({ yearsOfExperience: -1 })
+            .skip(skip)
+            .limit(limit);
+        
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
         console.error("Error in getAllTutorsBySearch:", error);
@@ -35,17 +43,36 @@ const getAllTutorsBySubject = async (req, res) => {
 
 const getAllTutors = async (req, res) => {
     try {
+        const page = Number(req.query.page) || 1;
+        const limit = 6;
+        const skip = (page - 1) * limit;
+
         const tutors = await Tutor.find({})
             .populate({
                 path: "userId",
-                select: "firstName lastName",
+                select: "firstName lastName email",
             })
             .select(
                 "grades about yearsOfExperience availability education avatar ForeignLanguages Science MathSubject SocialStudies English"
-            );
-        console.log(tutors);
+            )
+            .skip(skip)
+            .limit(limit);
 
-        res.status(StatusCodes.OK).json({ tutors });
+        const tutorCount = await Tutor.countDocuments({});
+
+            );
+
+        console.log(tutors);
+        console.log("Total number of tutors:", tutorCount);
+        console.log("Current page:", page);
+        console.log("Tutors per page:", limit);
+
+        res.status(StatusCodes.OK).json({
+            tutors,
+            tutorCount,
+            currentPage: page,
+            tutorsPerPage: limit,
+        });
     } catch (error) {
         console.error("Error in getAllTutors:", error);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
