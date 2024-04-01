@@ -42,10 +42,10 @@ const StudentsSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "User is required"],
     },
-    // imageUrl: [{
-    //   type: String,
-    //   required: [true, "Please choose student image"],
-    // }],
+    image: {
+      type: String,
+      required: [true, "Please choose student image"],
+    },
     grade: {
       type: String,
       enum: [

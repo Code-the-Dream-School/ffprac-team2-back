@@ -64,8 +64,8 @@ const updateStudent = async (req, res) => {
     const userId = req.user.userId;
     const studentId = req.params.id;
 
-    const { name, grade, tutorInfo, tutorToRemove } = req.body;
-    if (!name && !grade && !tutorInfo && !tutorToRemove) {
+    const { name, grade, tutorInfo, tutorToRemove, image } = req.body;
+    if (!name && !grade && !tutorInfo && !tutorToRemove && !image) {
       throw new BadRequestError("Please provide at least one value to update");
     }
 
@@ -75,29 +75,31 @@ const updateStudent = async (req, res) => {
       throw new NotFoundError(`No student with id: ${studentId}`);
     }
 
-    let updatedStudent;
+    let updatedFields = {};
+
+    if (name) updatedFields.name = name;
+    if (grade) updatedFields.grade = grade;
+    if (image) updatedFields.image = image;
 
     if (tutorToRemove) {
       const { tutorId, subject } = tutorToRemove;
-      updatedStudent = await Student.findByIdAndUpdate(
-        studentId,
-        { $pull: { tutorInfo: { tutorId: tutorId, subject: subject } } },
-        { new: true }
-      );
-    } else {
-      if (tutorInfo && tutorInfo.length > 0) {
-        const tutor = await Tutor.findOne({
-          _id: tutorInfo[0].tutorId,
-        }).populate("userId", "firstName lastName");
-        if (!tutor) {
-          throw new NotFoundError(`No tutor with id: ${tutorInfo[0].tutorId}`);
-        }
-        tutorInfo[0].tutorName = `${tutor.userId.firstName} ${tutor.userId.lastName}`;
-        student.tutorInfo.push(tutorInfo[0]);
+      updatedFields.$pull = { tutorInfo: { tutorId: tutorId, subject: subject } };
+    } else if (tutorInfo && tutorInfo.length > 0) {
+      const tutor = await Tutor.findOne({
+        _id: tutorInfo[0].tutorId,
+      }).populate("userId", "firstName lastName");
+      if (!tutor) {
+        throw new NotFoundError(`No tutor with id: ${tutorInfo[0].tutorId}`);
       }
-
-      updatedStudent = await student.save();
+      tutorInfo[0].tutorName = `${tutor.userId.firstName} ${tutor.userId.lastName}`;
+      updatedFields.$push = { tutorInfo: tutorInfo[0] };
     }
+
+    const updatedStudent = await Student.findByIdAndUpdate(
+      studentId,
+      updatedFields,
+      { new: true }
+    );
 
     res
       .status(StatusCodes.OK)
