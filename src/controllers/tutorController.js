@@ -60,8 +60,6 @@ const getAllTutors = async (req, res) => {
 
         const tutorCount = await Tutor.countDocuments({});
 
-            );
-
         console.log(tutors);
         console.log("Total number of tutors:", tutorCount);
         console.log("Current page:", page);
