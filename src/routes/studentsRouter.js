@@ -9,13 +9,16 @@ const {
   getStudentById,
   addStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 } = require("../controllers/studentsController");
 
+const { uploadStudentImage } = require("../controllers/uploadImgController");
+
 router.get('/', authMiddleware, isParentMiddleware, getAllParentStudents);
-router.get('/:id', authMiddleware, isParentMiddleware, getStudentById);  // ?
+router.get('/:id', authMiddleware, isParentMiddleware, getStudentById);
 router.post('/', authMiddleware, isParentMiddleware, addStudent);
 router.patch('/:id', authMiddleware, isParentMiddleware, updateStudent);
 router.delete('/:id', authMiddleware, isParentMiddleware, deleteStudent);
+router.route('/uploads').post(uploadStudentImage);
 
 module.exports = router;
