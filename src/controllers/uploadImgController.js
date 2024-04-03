@@ -4,7 +4,7 @@ const CustomError = require('../errors');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 
-const uploadStudentImage = async (req, res) => {
+const uploadImage = async (req, res) => {
   const result = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
     {
@@ -19,5 +19,5 @@ const uploadStudentImage = async (req, res) => {
 };
 
 module.exports = {
-  uploadStudentImage,
+  uploadImage,
 };
