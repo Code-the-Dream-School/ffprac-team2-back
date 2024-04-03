@@ -44,7 +44,6 @@ const StudentsSchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      required: [true, "Please choose student image"],
     },
     grade: {
       type: String,
