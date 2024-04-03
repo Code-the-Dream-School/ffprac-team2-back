@@ -6,6 +6,7 @@ const router = express.Router();
 
 const {
   getAllParentStudents,
+  getAllTutorStudents,
   getStudentById,
   addStudent,
   updateStudent,
@@ -15,6 +16,7 @@ const {
 const { uploadStudentImage } = require("../controllers/uploadImgController");
 
 router.get('/', authMiddleware, isParentMiddleware, getAllParentStudents);
+router.get('/my-students', authMiddleware, getAllTutorStudents);
 router.get('/:id', authMiddleware, isParentMiddleware, getStudentById);
 router.post('/', authMiddleware, isParentMiddleware, addStudent);
 router.patch('/:id', authMiddleware, isParentMiddleware, updateStudent);

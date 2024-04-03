@@ -1,6 +1,6 @@
 const Student = require("../models/Student");
 const Tutor = require("../models/Tutor");
-
+const mongoose = require("mongoose");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
 
@@ -21,6 +21,45 @@ const getAllParentStudents = async (req, res) => {
   } catch (err) {
     console.error("Error in getAllParentStudents:", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
+  }
+};
+
+const getAllTutorStudents = async (req, res) => {
+  try {
+    const {
+      user: { userId },
+    } = req;
+
+    const tutor = await Tutor.find({ userId: userId });
+
+    const students = await Student.find({
+      tutorInfo: {
+        $elemMatch: {
+          tutorId: new mongoose.Types.ObjectId(tutor[0]._id),
+        },
+      },
+    })
+      .populate("parentId", "firstName lastName email")
+      .lean();
+
+    const returnStudents = students.map((student) => {
+      return {
+        id: student._id,
+        name: student.name,
+        parent: `${student.parentId.firstName} ${student.parentId.lastName}`,
+        email: student.parentId.email,
+        subject: student.tutorInfo[0].subject,
+        availability: student.tutorInfo[0].availability,
+      };
+    });
+
+    res.status(StatusCodes.OK).json({
+      students: returnStudents,
+      count: returnStudents.length,
+    });
+  } catch (error) {
+    console.error("Error in getAllTutorStudents:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: error.message });
   }
 };
 
@@ -83,7 +122,9 @@ const updateStudent = async (req, res) => {
 
     if (tutorToRemove) {
       const { tutorId, subject } = tutorToRemove;
-      updatedFields.$pull = { tutorInfo: { tutorId: tutorId, subject: subject } };
+      updatedFields.$pull = {
+        tutorInfo: { tutorId: tutorId, subject: subject },
+      };
     } else if (tutorInfo && tutorInfo.length > 0) {
       const tutor = await Tutor.findOne({
         _id: tutorInfo[0].tutorId,
@@ -101,12 +142,10 @@ const updateStudent = async (req, res) => {
       { new: true }
     );
 
-    res
-      .status(StatusCodes.OK)
-      .json({
-        student: updatedStudent,
-        msg: "Student info has been successfully updated",
-      });
+    res.status(StatusCodes.OK).json({
+      student: updatedStudent,
+      msg: "Student info has been successfully updated",
+    });
   } catch (err) {
     console.error("Error fetching student:", err);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message });
@@ -137,6 +176,7 @@ const deleteStudent = async (req, res) => {
 
 module.exports = {
   getAllParentStudents,
+  getAllTutorStudents,
   getStudentById,
   addStudent,
   updateStudent,
