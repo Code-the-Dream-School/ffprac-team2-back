@@ -79,6 +79,24 @@ const getAllTutors = async (req, res) => {
     }
 };
 
+const getMyProfile = async (req, res) => {
+    try{
+        const {
+            user: { userId },
+          } = req;
+          console.log(userId);
+          const tutor= await Tutor.findOne({ userId: userId });
+          if (!tutor) {
+            throw new NotFoundError(`This user has no tutor: ${userId}`);
+          }
+          res.status(StatusCodes.OK).json({ tutor});
+    } catch (e) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            error: "Internal Server Error" + e.message,
+        });
+    }
+  }
+
 const getTutorById = async (req, res) => {
     try {
         const tutor = await Tutor.findById(req.params.id);
@@ -177,4 +195,5 @@ module.exports = {
     updateTutor,
     deleteTutor,
     getAllTutorsBySubject,
+    getMyProfile
 };
