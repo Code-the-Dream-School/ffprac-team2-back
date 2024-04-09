@@ -9,11 +9,14 @@ const {
     updateTutor,
     deleteTutor,
     getAllTutorsBySubject,
+    getMyProfile
 } = require("../controllers/tutorController");
 
 router.route("/").get(getAllTutors).post(authenticateUser, createTutor);
 
 router.route("/search").get(getAllTutorsBySubject);
+
+router.route("/my-profile").get(authenticateUser, getMyProfile);
 
 router
     .route("/:id")
