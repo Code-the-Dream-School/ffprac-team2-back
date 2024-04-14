@@ -1,0 +1,865 @@
+openapi: 3.0.0
+info:
+  title: Tutor App API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://ffprac-team2-back.onrender.com/api/v1/
+  variables: {}
+paths:
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register User
+      operationId: RegisterUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisterUserRequest'
+              - example:
+                  firstName: Lucy
+                  lastName: Smith
+                  email: lucysmith@gmail.com
+                  password: Aa+123456
+                  role: parent
+            example:
+              firstName: Lucy
+              lastName: Smith
+              email: lucysmith@gmail.com
+              password: Aa+123456
+              role: parent
+        required: true
+      responses:
+        '201':
+          description: CREATED
+          headers: { }
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login User
+      operationId: LoginUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LoginUserRequest'
+              - example:
+                  email: lucysmith@gmail.com
+                  password: Aa+123456
+            example:
+              email: lucysmith@gmail.com
+              password: Aa+123456
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security: []
+  /students:
+    post:
+      tags:
+      - Students
+      summary: Add New Student
+      operationId: AddNewStudent
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddNewStudentRequest'
+              - example:
+                  name: Anna
+                  grade: '3'
+                  image: ''
+            example:
+              name: Anna
+              grade: '3'
+              image: ''
+        required: true
+      responses:
+        '201':
+          description: CREATED
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Students
+      summary: Get All Parent Student
+      operationId: GetAllParentStudent
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /students/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The student ID
+    get:
+      tags:
+      - Students
+      summary: Get Student By ID
+      operationId: GetStudentByID
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Students
+      summary: Delete Students
+      operationId: DeleteStudents
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Students
+      summary: Update Student Info
+      operationId: UpdateStudentInfo
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateStudentInfoRequest'
+              - example:
+                  name: John Doe
+                  grade: '5'
+                  image: ''
+                  tutorInfo:
+                  - tutorId: 65fae084d678b204118dc048
+                    tutorName: Robert Graham
+                    subject: Biology
+                    availability: Tuesday
+            example:
+              name: John Doe
+              grade: '5'
+              image: ''
+              tutorInfo:
+              - tutorId: 5f3e95d4c28bca0024e826c6
+                tutorName: Tom Roth
+                subject: Mathematics
+                availability: Thursday
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /students/my-students:
+    get:
+      tags:
+      - Students
+      summary: Get All Tutor Students
+      operationId: GetAllTutorStudents
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  
+  /tutors:
+    post:
+      tags:
+      - Tutors
+      summary: Add New Tutor
+      operationId: AddNewTutor
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/AddNewTutorRequest'
+              - example:
+                  grades:
+                  - '6'
+                  - '7'
+                  - '8'
+                  avatar: ''
+                  yearsOfExperience: 10
+                  education: Harvard
+                  availability:
+                  - Monday
+                  - Tuesday
+                  - Wednesday
+                  subject:
+                  - math
+                  - science
+                  MathSubject:
+                  - Algebra
+                  - Geometry
+                  Science:
+                  - Chemistry
+                  - Biology
+                  ForeignLanguages:
+                  - Spanish
+                  - Chinese
+                  about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+            example:
+              grades:
+              - '6'
+              - '7'
+              - '8'
+              avatar: ''
+              yearsOfExperience: 10
+              education: Harvard
+              availability:
+              - Monday
+              - Tuesday
+              - Wednesday
+              subject:
+              - math
+              - science
+              MathSubject:
+              - Algebra
+              - Geometry
+              Science:
+              - Chemistry
+              - Biology
+              ForeignLanguages:
+              - Spanish
+              - Chinese
+              about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+        required: true
+      responses:
+        '201':
+          description: CREATED
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Tutors
+      summary: Get All Tutors
+      operationId: GetAllTutors
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security: []
+  /tutors/my-profile:
+    get:
+      tags:
+      - Tutors
+      summary: Get My Tutor Profile
+      operationId: GetMyTutorProfile
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /tutors/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The tutor ID
+          
+    get:
+      tags:
+      - Tutors
+      summary: Get 1 Tutor By ID
+      operationId: Get1TutorByID
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security: []
+    patch:
+      tags:
+      - Tutors
+      summary: Update Tutor
+      operationId: UpdateTutor
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateTutorRequest'
+              - example:
+                  yearsOfExperience: 10
+                  education: Harvard
+                  grades:
+                  - '11'
+                  - '12'
+                  avatar: ''
+                  availability:
+                  - Monday
+                  - Tuesday
+                  - Wednesday
+                  subject:
+                  - math
+                  - science
+                  MathSubject:
+                  - Algebra
+                  - Geometry
+                  Science:
+                  - Chemistry
+                  - Biology
+                  ForeignLanguages:
+                  - Spanish
+                  - Chinese
+                  about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+            example:
+              yearsOfExperience: 10
+              education: Harvard
+              grades:
+              - '11'
+              - '12'
+              avatar: ''
+              availability:
+              - Monday
+              - Tuesday
+              - Wednesday
+              subject:
+              - math
+              - science
+              MathSubject:
+              - Algebra
+              - Geometry
+              Science:
+              - Chemistry
+              - Biology
+              ForeignLanguages:
+              - Spanish
+              - Chinese
+              about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Tutors
+      summary: Delete Tutor
+      operationId: DeleteTutor
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /emails/send/6607048cfb5803f9e970676b:
+    post:
+      tags:
+      - Email
+      summary: Send email
+      operationId: SendEmail
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SendEmailRequest'
+              - example:
+                  subject: ''
+                  message: ''
+            example:
+              subject: ''
+              message: ''
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+        '401':
+          description: UNAUTHORIZED
+          headers: {}
+        '403':
+          description: FORBIDDEN
+          headers: {}
+        '500':
+          description: BAD_REQUEST
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    RegisterUserRequest:
+      title: RegisterUserRequest
+      required:
+      - firstName
+      - lastName
+      - email
+      - password
+      - role
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      example:
+        firstName: Lusy
+        lastName: Smith
+        email: lusysmith@gmail.com
+        password: Secret5+
+        role: parent
+    LoginUserRequest:
+      title: LoginUserRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: lusysmith@gmail.com
+        password: Secret5+
+    AddNewStudentRequest:
+      title: AddNewStudentRequest
+      required:
+      - name
+      - grade
+      - image
+      type: object
+      properties:
+        name:
+          type: string
+        grade:
+          type: string
+        image:
+          type: string
+      example:
+        name: Anna
+        grade: '3'
+        image: ''
+    UpdateStudentInfoRequest:
+      title: UpdateStudentInfoRequest
+      required:
+      - name
+      - grade
+      - image
+      - tutorInfo
+      type: object
+      properties:
+        name:
+          type: string
+        grade:
+          type: string
+        image:
+          type: string
+        tutorInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/TutorInfo'
+          description: ''
+      example:
+        name: John Doe
+        grade: '5'
+        image: ''
+        tutorInfo:
+        - tutorId: 5f3e95d4c28bca0024e826c6
+          tutorName: Tom Roth
+          subject: Mathematics
+          availability: Thursday
+    TutorInfo:
+      title: TutorInfo
+      required:
+      - tutorId
+      - tutorName
+      - subject
+      - availability
+      type: object
+      properties:
+        tutorId:
+          type: string
+        tutorName:
+          type: string
+        subject:
+          type: string
+        availability:
+          type: string
+      example:
+        tutorId: 5f3e95d4c28bca0024e826c6
+        tutorName: Tom Roth
+        subject: Mathematics
+        availability: Thursday
+    RemoveTutorFromStudentRequest:
+      title: RemoveTutorFromStudentRequest
+      required:
+      - tutorToRemove
+      type: object
+      properties:
+        tutorToRemove:
+          allOf:
+          - $ref: '#/components/schemas/TutorToRemove'
+          - {}
+      example:
+        tutorToRemove:
+          tutorId: 5f3e95d4c28bca0024e826c6
+          subject: Mathematics
+    TutorToRemove:
+      title: TutorToRemove
+      required:
+      - tutorId
+      - subject
+      type: object
+      properties:
+        tutorId:
+          type: string
+        subject:
+          type: string
+      example:
+        tutorId: 5f3e95d4c28bca0024e826c6
+        subject: Mathematics
+    AddNewTutorRequest:
+      title: AddNewTutorRequest
+      required:
+      - grades
+      - avatar
+      - yearsOfExperience
+      - education
+      - availability
+      - subject
+      - MathSubject
+      - Science
+      - ForeignLanguages
+      - about
+      type: object
+      properties:
+        grades:
+          type: array
+          items:
+            type: string
+          description: ''
+        avatar:
+          type: string
+        yearsOfExperience:
+          type: integer
+          format: int32
+        education:
+          type: string
+        availability:
+          type: array
+          items:
+            type: string
+          description: ''
+        subject:
+          type: array
+          items:
+            type: string
+          description: ''
+        MathSubject:
+          type: array
+          items:
+            type: string
+          description: ''
+        Science:
+          type: array
+          items:
+            type: string
+          description: ''
+        ForeignLanguages:
+          type: array
+          items:
+            type: string
+          description: ''
+        about:
+          type: string
+      example:
+        grades:
+        - '6'
+        - '7'
+        - '8'
+        avatar: ''
+        yearsOfExperience: 10
+        education: Harvard
+        availability:
+        - Monday
+        - Tuesday
+        - Wednesday
+        subject:
+        - math
+        - science
+        MathSubject:
+        - Algebra
+        - Geometry
+        - Algebra
+        Science:
+        - Chemistry
+        - Biology
+        ForeignLanguages:
+        - Spanish
+        - Chinese
+        about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+    UpdateTutorRequest:
+      title: UpdateTutorRequest
+      required:
+      - yearsOfExperience
+      - education
+      - grades
+      - avatar
+      - availability
+      - subject
+      - MathSubject
+      - Science
+      - ForeignLanguages
+      - about
+      type: object
+      properties:
+        yearsOfExperience:
+          type: integer
+          format: int32
+        education:
+          type: string
+        grades:
+          type: array
+          items:
+            type: string
+          description: ''
+        avatar:
+          type: string
+        availability:
+          type: array
+          items:
+            type: string
+          description: ''
+        subject:
+          type: array
+          items:
+            type: string
+          description: ''
+        MathSubject:
+          type: array
+          items:
+            type: string
+          description: ''
+        Science:
+          type: array
+          items:
+            type: string
+          description: ''
+        ForeignLanguages:
+          type: array
+          items:
+            type: string
+          description: ''
+        about:
+          type: string
+      example:
+        yearsOfExperience: 10
+        education: Harvard
+        grades:
+        - '11'
+        - '12'
+        avatar: ''
+        availability:
+        - Monday
+        - Tuesday
+        - Wednesday
+        subject:
+        - math
+        - science
+        MathSubject:
+        - Algebra
+        - Geometry
+        Science:
+        - Chemistry
+        - Biology
+        ForeignLanguages:
+        - Spanish
+        - Chinese
+        about: I'm a passionate and experienced Mathematics tutor with more than 10 years of teaching experience. I have a Bachelor's degree in Mathematics and a Master's degree in Education, both from NYU.
+    SendEmailRequest:
+      title: SendEmailRequest
+      required:
+      - subject
+      - message
+      type: object
+      properties:
+        subject:
+          type: string
+        message:
+          type: string
+      example:
+        subject: ''
+        message: ''
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+  description: ''
+- name: Students
+  description: ''
+- name: Tutors
+  description: ''
+- name: Email
+  description: ''
