@@ -10,7 +10,7 @@ const TutorSchema = new mongoose.Schema({
 
     ForeignLanguages: {
         type: [String],
-        enum: ["Spanish", "French", "Chineese", "German", "Latin"],
+        enum: ["Spanish", "French", "Chinese", "German", "Latin"],
     },
 
     MathSubject: {

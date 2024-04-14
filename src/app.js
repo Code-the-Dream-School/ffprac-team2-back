@@ -7,6 +7,9 @@ const favicon = require('express-favicon');
 const logger = require('morgan');
 const fileUpload = require('express-fileupload');
 const cloudinary = require('cloudinary').v2;
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDoc = YAML.load("./src/swagger.yaml");
 
 require('express-async-errors');
 require('dotenv').config();
@@ -44,6 +47,8 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(fileUpload({ useTempFiles: true }));
 
 // routes
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+
 app.use("/api/v1", mainRouter);
 
 app.use("/api/v1/auth", authRouter);
