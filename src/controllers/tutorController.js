@@ -47,7 +47,21 @@ const getAllTutors = async (req, res) => {
         const limit = 6;
         const skip = (page - 1) * limit;
 
-        const tutors = await Tutor.find({})
+        let subjectsFilter = {};
+        if (req.query.subjects) {
+            const subjects = req.query.subjects.split(",");
+            subjectsFilter = {
+                $or: [
+                    { MathSubject: { $in: subjects } },
+                    { English: { $in: subjects } },
+                    { Science: { $in: subjects } },
+                    { ForeignLanguages: { $in: subjects } },
+                    { SocialStudies: { $in: subjects } },
+                ],
+            };
+        }
+
+        const tutors = await Tutor.find(subjectsFilter)
             .populate({
                 path: "userId",
                 select: "firstName lastName email",
