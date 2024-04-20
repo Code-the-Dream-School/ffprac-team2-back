@@ -31,7 +31,7 @@ const getAllTutorsBySubject = async (req, res) => {
             // .sort({ yearsOfExperience: -1 })
             .skip(skip)
             .limit(limit);
-        
+
         res.status(StatusCodes.OK).json({ tutors });
     } catch (error) {
         console.error("Error in getAllTutorsBySearch:", error);
@@ -61,7 +61,19 @@ const getAllTutors = async (req, res) => {
             };
         }
 
-        const tutors = await Tutor.find(subjectsFilter)
+        let gradesFilter = {};
+        if (req.query.grades) {
+            const grades = req.query.grades.split(",");
+            gradesFilter = {
+                grades: { $in: grades },
+            };
+        }
+
+        let filter = {
+            $and: [subjectsFilter, gradesFilter],
+        };
+
+        const tutors = await Tutor.find(filter)
             .populate({
                 path: "userId",
                 select: "firstName lastName email",
@@ -94,22 +106,22 @@ const getAllTutors = async (req, res) => {
 };
 
 const getMyProfile = async (req, res) => {
-    try{
+    try {
         const {
             user: { userId },
-          } = req;
-          console.log(userId);
-          const tutor= await Tutor.findOne({ userId: userId });
-          if (!tutor) {
+        } = req;
+        console.log(userId);
+        const tutor = await Tutor.findOne({ userId: userId });
+        if (!tutor) {
             throw new NotFoundError(`This user has no tutor: ${userId}`);
-          }
-          res.status(StatusCodes.OK).json({ tutor});
+        }
+        res.status(StatusCodes.OK).json({ tutor });
     } catch (e) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             error: "Internal Server Error" + e.message,
         });
     }
-  }
+};
 
 const getTutorById = async (req, res) => {
     try {
@@ -209,5 +221,5 @@ module.exports = {
     updateTutor,
     deleteTutor,
     getAllTutorsBySubject,
-    getMyProfile
+    getMyProfile,
 };
