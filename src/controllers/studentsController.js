@@ -50,6 +50,8 @@ const getAllTutorStudents = async (req, res) => {
         email: student.parentId.email,
         subject: student.tutorInfo[0].subject,
         availability: student.tutorInfo[0].availability,
+        image: student.image,
+        grade: student.grade,
       };
     });
 
