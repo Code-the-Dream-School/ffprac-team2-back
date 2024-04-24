@@ -341,7 +341,17 @@ paths:
       - Tutors
       summary: Get All Tutors
       operationId: GetAllTutors
-      parameters: []
+      parameters:
+      - in: query
+        name: subjects
+        description: Comma-separated list of subjects
+        schema:
+          type: string
+      - in: query
+        name: grades
+        description: Comma-separated list of grades
+        schema:
+          type: string
       responses:
         '200':
           description: OK

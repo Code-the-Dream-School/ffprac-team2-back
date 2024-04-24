@@ -84,12 +84,7 @@ const getAllTutors = async (req, res) => {
             .skip(skip)
             .limit(limit);
 
-        const tutorCount = await Tutor.countDocuments({});
-
-        console.log(tutors);
-        console.log("Total number of tutors:", tutorCount);
-        console.log("Current page:", page);
-        console.log("Tutors per page:", limit);
+        const tutorCount = tutors.length;
 
         res.status(StatusCodes.OK).json({
             tutors,
@@ -110,7 +105,7 @@ const getMyProfile = async (req, res) => {
         const {
             user: { userId },
         } = req;
-        console.log(userId);
+
         const tutor = await Tutor.findOne({ userId: userId });
         if (!tutor) {
             throw new NotFoundError(`This user has no tutor: ${userId}`);
@@ -125,7 +120,14 @@ const getMyProfile = async (req, res) => {
 
 const getTutorById = async (req, res) => {
     try {
-        const tutor = await Tutor.findById(req.params.id);
+        const tutor = await Tutor.findById(req.params.id)
+        .populate({
+            path: "userId",
+            select: "firstName lastName email",
+        })
+        .select(
+            "grades about yearsOfExperience availability education avatar ForeignLanguages Science MathSubject SocialStudies English"
+        );
         if (!tutor) {
             throw new NotFoundError("Tutor not found");
         }
@@ -155,9 +157,6 @@ const createTutor = async (req, res) => {
             const tutor = await Tutor.create({ ...req.body });
             res.status(StatusCodes.CREATED).json({ tutor });
         }
-        console.log("UserID:", req.user.userId);
-        // const tutor = await Tutor.create({ ...req.body });
-        // res.status(StatusCodes.CREATED).json({ tutor });
     } catch (error) {
         console.error("Error in createTutor:", error);
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
