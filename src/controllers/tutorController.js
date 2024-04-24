@@ -121,13 +121,13 @@ const getMyProfile = async (req, res) => {
 const getTutorById = async (req, res) => {
     try {
         const tutor = await Tutor.findById(req.params.id)
-        .populate({
-            path: "userId",
-            select: "firstName lastName email",
-        })
-        .select(
-            "grades about yearsOfExperience availability education avatar ForeignLanguages Science MathSubject SocialStudies English"
-        );
+            .populate({
+                path: "userId",
+                select: "firstName lastName email",
+            })
+            .select(
+                "grades about yearsOfExperience availability education avatar ForeignLanguages Science MathSubject SocialStudies English"
+            );
         if (!tutor) {
             throw new NotFoundError("Tutor not found");
         }
