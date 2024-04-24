@@ -344,14 +344,30 @@ paths:
       parameters:
       - in: query
         name: subjects
-        description: Comma-separated list of subjects
+        description: List of subjects
         schema:
           type: string
+          enum: ["Spanish", "French", "Chinese", "German", "Latin", "Math", "Algebra", "Geometry", "Trigonometry", "Calculus", "Statistics", "Pre-Calculus", "SAT Math Test Prep", "ACT Math Test Prep", "Biology", "Chemistry", "Earth Science", "Physics", "Science", "ACT Science Test Prep", "World History", "Psychology", "US Government", "Social Science", "US History", "Political Science", "Geography", "European History", "Writing", "Reading", "ESL", "Poetry", "Literacy", "ACT English Test Prep", "ACT Reading Test Prep", "ACT Writing Test Prep"]
+          x-ui-component: "input-with-dropdown"    
       - in: query
         name: grades
-        description: Comma-separated list of grades
+        description: Grade level
         schema:
           type: string
+          enum: ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+          x-ui-component: "input-with-dropdown"
+      - in: query
+        name: limit
+        description: 
+        schema:
+          type: number
+          default: 50
+      - in: query
+        name: page
+        description: 
+        schema:
+          type: number
+          default: 1
       responses:
         '200':
           description: OK
