@@ -7,10 +7,7 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res) => {
   try {
     const user = await User.create({ ...req.body });
-
-    // console.log("name: ", user.firstName, user.lastName, user.email, user.role);
-    const token = user.createJWT();
-    console.log("token ", token);
+    const token = user.createJWT(); 
     res.status(StatusCodes.CREATED).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
   } catch (err) {
     if (err.code === 11000) {
@@ -41,7 +38,6 @@ const login = async (req, res) => {
   
     //comparing password
     const token = user.createJWT();
-    // console.log("userId ", user._id, user.firstName, user.lastName, user.email, user.role);
     res.status(StatusCodes.OK).json({ user: { firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }, token });
   } catch (err) {
     console.error("Error during login", err);

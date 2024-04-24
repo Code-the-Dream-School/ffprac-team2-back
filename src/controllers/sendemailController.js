@@ -15,7 +15,6 @@ const sendemailController = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        // console.log(user);
 
         const transporter = nodemailer.createTransport({
             service: "outlook",
@@ -27,7 +26,6 @@ const sendemailController = async (req, res) => {
             },
         });
 
-        console.log(user.email);
         const mailOptions = {
             from: process.env.EMAIL_USERNAME,
             to: user.email,
@@ -42,8 +40,7 @@ const sendemailController = async (req, res) => {
                     message: "Internal Server Error",
                     error,
                 });
-            } else {
-                console.log("Email sent successfully:", info.response);
+            } else {               
                 res.status(200).json({ message: "Email sent successfully" });
             }
         });
